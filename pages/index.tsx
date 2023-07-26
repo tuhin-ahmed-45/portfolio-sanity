@@ -4,34 +4,57 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Projects from "@/components/Projects";
 import Skills from "@/components/Skills";
+import { sanityClient } from "@/sanity";
+import { Experience, PageInfo, Project, Skill, Social } from "@/typings";
+import { GetStaticProps } from "next";
+import { groq } from "next-sanity";
 import { Inter } from "next/font/google";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import WorkExperience from "../components/WorkExperience";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
-  return (
+type Props = {
+  pageInfo: PageInfo;
+  experiences: Experience[];
+  skills: Skill[];
+  projects: Project[];
+  socials: Social[];
+};
+
+export default function Home({
+  pageInfo,
+  experiences,
+  projects,
+  skills,
+  socials,
+}: Props) {
+  const [domLoaded, setDomLoaded] = useState(false);
+  useEffect(() => {
+    setDomLoaded(true);
+  }, []);
+  return domLoaded && pageInfo && socials && projects && experiences ? (
     <div className="bg-[rgb(36,36,36)] text-white h-screen snap-y snap-mandatory overflow-y-scroll overflow-x-hidden z-0 scrollbar scrollbar-track-gray-400/20 scrollbar-thumb-[#F7AB0A]/80">
-      <Header />
+      <Header socials={socials} />
 
       <section id="hero" className="snap-start">
-        <Hero />
+        <Hero pageInfo={pageInfo} />
       </section>
 
       <section id="about" className="snap-center">
-        <About />
+        <About pageInfo={pageInfo} />
       </section>
 
       <section className="snap-center" id="experience">
-        <WorkExperience />
+        <WorkExperience experiences={experiences} />
       </section>
 
       <section id="skills" className="snap-center">
         <Skills />
       </section>
       <section id="projects" className="snap-start">
-        <Projects />
+        <Projects projects={projects} />
       </section>
 
       <section className="snap-start" id="contact">
@@ -50,5 +73,48 @@ export default function Home() {
         </footer>
       </Link>
     </div>
-  );
+  ) : null;
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+  // Fetch the data here and assign it to the respective variables.
+  const pageInfo: PageInfo = await sanityClient.fetch(groq`
+  *[_type == "pageInfo"][0]
+`);
+  const experiences: Experience[] = await sanityClient.fetch(groq`
+  *[_type == "experience"] {
+    ...,
+    technologies[]->
+  }
+`);
+  const skills: Skill[] = await sanityClient.fetch(groq`
+  *[_type == "skill"]
+`);
+  const projects: Project[] = await sanityClient.fetch(groq`
+  *[_type == "project"] {
+    ...,
+    technologies[]->
+  }
+`);
+  const socials: Social[] = await sanityClient.fetch(groq`
+  *[_type == "social"]
+`);
+
+  try {
+    return {
+      props: {
+        pageInfo,
+        experiences,
+        skills,
+        projects,
+        socials,
+      },
+      revalidate: 10,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      props: {},
+    };
+  }
+};

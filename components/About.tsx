@@ -1,7 +1,11 @@
+import { urlFor } from "@/sanity";
+import { PageInfo } from "@/typings";
 import { motion } from "framer-motion";
-type Props = {};
+type Props = {
+  pageInfo: PageInfo;
+};
 
-export default function About({}: Props) {
+export default function About({ pageInfo }: Props) {
   return (
     <motion.div
       initial={{
@@ -32,7 +36,7 @@ export default function About({}: Props) {
           x: 0,
         }}
         viewport={{ once: true }}
-        src="https://scontent.fzyl2-1.fna.fbcdn.net/v/t39.30808-6/323876361_650577143484284_4162454874438890280_n.jpg?_nc_cat=106&cb=99be929b-3346023f&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=e5F2D0RT0BYAX8hWwAs&_nc_ht=scontent.fzyl2-1.fna&oh=00_AfDN3mXibQrclxC215z43YRT5p6gKpv71IbucVK2IE0IBg&oe=64C085E5"
+        src={urlFor(pageInfo?.profilePic).url()}
         className="mb-20 md:mb-0 flex-shrink-0 w-56 h-56 rounded-full object-cover md:rounded-lg md:w-50 md:h-60 xl:w-[300px] xl:h-[400px] "
       />
 
@@ -42,20 +46,7 @@ export default function About({}: Props) {
           <span className="underline decoration-[#F7AB0A]">Little</span>{" "}
           Background
         </h4>
-        <p className="text-base">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente
-          excepturi ad suscipit, eveniet, ipsa provident modi sint quae fuga
-          sunt facere illum reprehenderit rem alias. Excepturi saepe ad totam
-          autem. Amet voluptate aperiam sequi facere eveniet magnam,
-          praesentium, sunt suscipit explicabo alias voluptatum ut pariatur.
-          Officiis dicta hic officia eos perferendis iste maxime voluptas quos
-          pariatur assumenda impedit, nisi velit sint ex facere temporibus, sed
-          expedita reprehenderit a quam, quae perspiciatis exercitationem.
-          Consectetur saepe harum hic suscipit quae animi nobis maxime, iste
-          laudantium ad ea? Architecto labore at fuga natus aspernatur
-          obcaecati, expedita quidem consequuntur minima molestias, veniam
-          aliquam sequi!😀
-        </p>
+        <p className="text-base">{pageInfo?.backgroundInformation}</p>
       </div>
     </motion.div>
   );

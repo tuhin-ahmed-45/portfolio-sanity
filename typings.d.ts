@@ -5,6 +5,14 @@ interface SanityBody {
   _updatedAt: string;
 }
 
+interface Image {
+  _type: "image";
+  asset: {
+    _ref: string;
+    _type: "reference";
+  };
+}
+
 export interface PageInfo extends SanityBody {
   _type: "pageInfo";
   address: string;
@@ -29,6 +37,7 @@ export interface Experience extends SanityBody {
   company: string;
   companyImage: Image;
   dateStarted: date;
+  dateEnded: Date;
   isCurrentlyWorkingHere: boolean;
   jobTitle: string;
   points: string[];
