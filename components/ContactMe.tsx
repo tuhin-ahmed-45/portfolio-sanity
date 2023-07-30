@@ -1,3 +1,4 @@
+import { useStore } from "@/store";
 import { PhoneIcon } from "@heroicons/react/20/solid";
 import { MapPinIcon } from "@heroicons/react/24/outline";
 import { EnvelopeIcon } from "@heroicons/react/24/solid";
@@ -11,10 +12,13 @@ type Inputs = {
   message: string;
 };
 function ContactMe({}: Props) {
+  const { bears } = useStore();
   const { register, handleSubmit } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = (formData) => {
     window.location.href = `mailto:mdtuhin.dev@gmail?subject=${formData.subject}&body=Hi, my name is ${formData.name}. ${formData.message} (${formData.email})`;
   };
+  console.log("Contact-Me bears", bears);
+
   return (
     <div className="h-screen flex relative overflow-hidden flex-col text-center md:text-left md:flex-row max-w-4xl px-10 justify-evenly mx-auto items-center ">
       <h3 className="absolute top-24 uppercase tracking-[20px] text-gray-500 text-2xl">

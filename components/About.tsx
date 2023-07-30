@@ -1,4 +1,5 @@
 import { urlFor } from "@/sanity";
+import { useStore } from "@/store";
 import { PageInfo } from "@/typings";
 import { motion } from "framer-motion";
 type Props = {
@@ -6,6 +7,8 @@ type Props = {
 };
 
 export default function About({ pageInfo }: Props) {
+  const { bears, userData, updateUser } = useStore();
+  console.log({ bears, userData });
   return (
     <motion.div
       initial={{
@@ -47,6 +50,17 @@ export default function About({ pageInfo }: Props) {
           Background
         </h4>
         <p className="text-base">{pageInfo?.backgroundInformation}</p>
+        <button
+          onClick={() =>
+            updateUser({
+              name: "Tuhin",
+              age: 18,
+              mobile: "01955886644",
+            })
+          }
+        >
+          Update User
+        </button>
       </div>
     </motion.div>
   );
